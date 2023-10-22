@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Lead } from 'app/lead-model';
+import { map, switchMap } from 'rxjs';
 
 
 
@@ -8,8 +9,7 @@ import { Lead } from 'app/lead-model';
   providedIn: 'root',
 })
 export class LeadService {
-  private apiUrl = 'http://localhost:3000/api/leads'; // Replace with the actual API URL
-
+  private apiUrl = 'http://localhost:3000/api/leads';
   constructor(private http: HttpClient) {}
 
   getLeads(){
@@ -17,7 +17,15 @@ export class LeadService {
   }
 
   getPotentialDuplicates(leadId: string){
-    return this.http.get(`${this.apiUrl}/${leadId}/potential-duplicates`);
+    return this.http.get(`${this.apiUrl}/${leadId}/potential-duplicates`).pipe(
+      switchMap((potentialDuplicateIds : any) => {
+        return this.getLeads().pipe(
+          map((allLeads : any) => {
+            return allLeads.filter(lead => potentialDuplicateIds.includes(lead.lead_id));
+          })
+        );
+      })
+    );
   }
 
   markDuplicate(leadId: string, duplicateId: string){
