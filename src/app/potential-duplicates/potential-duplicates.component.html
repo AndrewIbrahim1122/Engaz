@@ -7,12 +7,12 @@
                         <h4 class="card-title ">Potential duplicates </h4>
                     </div>
                     <div class="card-body">
+                      <div class="d-flex justify-content-end">
+                        <button class="btn btn-primary" routerLink="/table-list">Back</button>
+                      </div>
                       <ng-container *ngIf="dataSource">
                         <ng-container *ngIf="dataSource.length > 0 else emptyPotentialDuplicates">
-                          <div class="d-flex justify-content-between align-items-center">
                               <p>These are the potential duplicates :</p>
-                              <button class="btn btn-primary" routerLink="/table-list">Back</button>
-                          </div>
                           <div class="table-responsive">
                               <div>
                                   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 w-100">
